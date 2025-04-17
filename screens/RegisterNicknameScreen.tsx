@@ -13,19 +13,44 @@ import {
   Keyboard,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import LoadingScreen from "./LoadingScreen";
+import { RegisterNicknameApi } from "./RegisterNicknameAPI";
+import { Alert } from "react-native";
 
 export default function RegisterNicknameScreen() {
   const router = useRouter();
-  const [nickname,setNickname] = useState("")
+  const [isLoading, setIsLoading] = useState(false);
+  const [nickName, setNickname] = useState("");
 
   const handleRegister = () => {
     router.push("/registerAccount");
   };
 
-  const handleTop = () => {
-    alert("たぬきちの世界へようこそだも！");
-    router.push("/(tabs)/top");
-  };
+  const handleTop = async (nickName : string) => {
+    setIsLoading(true); // ローディング開始
+    try{
+
+      console.log("API START:", nickName)
+      const data = await RegisterNicknameApi(nickName); // API呼び出し
+      console.log("API END:", nickName)
+
+      if (data.result.nickName != null) {
+        Alert.alert("登録成功!","たぬきちの世界へようこそだも！");
+        router.push("/(tabs)/top"); // チャット画面に遷移
+        } else {
+          throw new Error(data.resultCode || "ニックネームの登録に失敗しました。");
+        }
+      } catch (error) {
+        // エラーハンドリング
+        alert("ニックネームの登録に失敗しました。");
+      } finally {
+        setIsLoading(false); // ローディング終了
+      };
+    }
+
+      if (isLoading) {
+          return <LoadingScreen />;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -42,13 +67,18 @@ export default function RegisterNicknameScreen() {
             style={styles.image}
           />
           <Text style={styles.title}>たぬきちになんて呼ばれたい？</Text>
-          <TextInput placeholder="ニックネーム" style={styles.input} value={nickname} onChangeText={setNickname} />
-          
+          <TextInput
+            placeholder="ニックネーム"
+            style={styles.input}
+            value={nickName}
+            onChangeText={setNickname}
+          />
+
           <CustomButtonRegisterNickname
             title="登録"
             onPress={handleTop}
             style={undefined}
-            nickname={nickname}
+            nickname={nickName}
           />
 
           <CustomButton

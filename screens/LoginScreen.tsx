@@ -33,7 +33,7 @@ export default function LoginScreen() {
       // await new Promise((resolve) => setTimeout(resolve, 3000));
       const data = await loginUser(name, password); //APIを実行
       Alert.alert("ログイン成功", `ユーザー名: ${data.result.name}さん`);
-      router.push("/top");
+      router.push("//top"); //  
     } catch (error) {
       // エラーハンドリング
       alert("ログインに失敗しました。");

@@ -20,14 +20,12 @@ const CustomButtonRegisterNickname: React.FC<CustomButtonProps> = ({
   nickname,
 }) => {
   const handlePress = (event: GestureResponderEvent) => {
-    console.log("登録ボタン押した時のname:", name);
+    console.log("登録ボタン押した時のname:", nickname);
 
     if (typeof onPress === "function") {
       if (onPress.length === 1) {
         if (nickname) {
-          (onPress as (name: string) => Promise<void>)(
-            nickname,
-          );
+          (onPress as (nickname: string) => Promise<void>)(nickname);
         } else {
           console.warn("ニックネームが渡されていません");
         }

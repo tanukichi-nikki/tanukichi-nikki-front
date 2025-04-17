@@ -4,7 +4,7 @@ import { Configuration, LoginApi, LoginReq } from "@/src/client";
 const defaultApi = new LoginApi(
   new Configuration({
     basePath:
-      "http://tanukichi-alb-1407649377.ap-northeast-1.elb.amazonaws.com",
+      "http://tanukichi-alb-366766036.ap-northeast-1.elb.amazonaws.com",
   })
 );
 
