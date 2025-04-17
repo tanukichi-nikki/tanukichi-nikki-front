@@ -1,0 +1,329 @@
+openapi: 3.0.2
+info:
+  title: Login API
+  description: API for user login functionality.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8081/tanukichi
+
+paths:
+  /api/v1/login:
+    post:
+      summary: User login
+      description: This endpoint allows a user to log in by providing login credentials.
+      operationId: doLogin
+      tags:
+        - Login
+      requestBody:
+        description: Login request with credentials.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginReq"
+      responses:
+        "200":
+          description: Login successful, returns the login result.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginWrapperResult"
+        "400":
+          description: Bad request, validation failed or missing parameters.
+        "500":
+          description: Internal server error.
+      security:
+        - api_key: []
+  /api/v1/register/user:
+    post:
+      summary: Register a new user
+      description: This endpoint allows a user to register by providing their email and password.
+      operationId: doRegisterUser
+      tags:
+        - Register
+      requestBody:
+        description: User registration request with email and password.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterUserReq"
+      responses:
+        "200":
+          description: User registration successful, returns the registration result.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterUserWrapperResult"
+        "400":
+          description: Bad request, validation failed or missing parameters.
+        "500":
+          description: Internal server error.
+  /api/v1/register/nickName:
+    post:
+      summary: Register a nickname for a user
+      operationId: registerNickName
+      requestBody:
+        description: Request payload for registering a nickname.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterNickNameReq"
+        required: true
+      responses:
+        "200":
+          description: Successfully registered nickname
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterNickNameWrapperResult"
+        "400":
+          description: Bad request (e.g., invalid input)
+        "500":
+          description: Internal server error
+  /api/v1/communicate:
+    post:
+      summary: Send a communication message
+      operationId: communicate
+      requestBody:
+        description: Request payload for sending a communication message.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommunicateReq"
+        required: true
+      responses:
+        "200":
+          description: Successfully sent the communication message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommunicateWrapperResult"
+        "400":
+          description: Bad request (e.g., invalid input)
+        "500":
+          description: Internal server error
+  /api/v1/diary:
+    post:
+      summary: Create a new diary entry
+      operationId: createDiary
+      requestBody:
+        description: Request payload for creating a new diary entry.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateDiaryReq"
+        required: true
+      responses:
+        "200":
+          description: Successfully created the diary entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateDiaryWrapperResult"
+        "400":
+          description: Bad request (e.g., invalid input)
+        "500":
+          description: Internal server error
+
+components:
+  schemas:
+    LoginReq:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the user.
+        password:
+          type: string
+          description: The password of the user.
+      required:
+        - name
+        - password
+    LoginWrapperResult:
+      type: object
+      properties:
+        resultCode:
+          type: string
+          description: The result code of the login attempt.
+        result:
+          $ref: "#/components/schemas/LoginWrapper"
+      required:
+        - resultCode
+        - result
+    LoginWrapper:
+      type: object
+      properties:
+        userId:
+          type: integer
+          description: The ID of the user.
+        name:
+          type: string
+          description: The name of the user.
+        nickName:
+          type: string
+          description: The nickname of the user.
+        result:
+          type: boolean
+          description: The result of the login attempt, true if successful.
+      required:
+        - userId
+        - name
+        - nickName
+        - result
+    RegisterUserReq:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The email address of the user.
+          example: "user@example.com"
+        password:
+          type: string
+          description: The password for the user.
+          example: "strongpassword123"
+      required:
+        - name
+        - password
+    RegisterUserWrapperResult:
+      type: object
+      properties:
+        resultCode:
+          type: string
+          description: The result code of the registration attempt.
+          example: "200"
+        result:
+          $ref: "#/components/schemas/RegisterUserWrapper"
+      required:
+        - resultCode
+        - result
+    RegisterUserWrapper:
+      type: object
+      properties:
+        userId:
+          type: integer
+          description: The ID of the user.
+          example: 123
+        name:
+          type: string
+          description: The name (email address) of the user.
+          example: "user@example.com"
+        result:
+          type: boolean
+          description: The result of the registration attempt, true if successful.
+          example: true
+      required:
+        - userId
+        - name
+        - result
+    RegisterNickNameReq:
+      type: object
+      properties:
+        nickName:
+          type: string
+          description: The nickname to be registered.
+          example: "user@example.com"
+      required:
+        - nickName
+    RegisterNickNameWrapper:
+      type: object
+      properties:
+        nickName:
+          type: string
+          description: The registered nickname.
+        result:
+          type: boolean
+          description: Whether the registration was successful.
+      required:
+        - nickName
+        - result
+    RegisterNickNameWrapperResult:
+      type: object
+      properties:
+        resultCode:
+          type: string
+          description: The result code of the operation (e.g., success or error code).
+          example: "200"
+        result:
+          $ref: "#/components/schemas/RegisterNickNameWrapper"
+      required:
+        - resultCode
+        - result
+    CommunicateReq:
+      type: object
+      properties:
+        communicate:
+          type: string
+          description: The communication message.
+          maxLength: 5000
+          example: "Hello, this is a test message."
+      required:
+        - communicate
+    CommunicateWrapper:
+      type: object
+      properties:
+        communicate:
+          type: string
+          description: The communication message.
+          example: "Message sent successfully."
+      required:
+        - communicate
+    CommunicateWrapperResult:
+      type: object
+      properties:
+        resultCode:
+          type: string
+          description: The result code of the operation (e.g., success or error code).
+          example: "200"
+        result:
+          $ref: "#/components/schemas/CommunicateWrapper"
+      required:
+        - resultCode
+        - result
+    CreateDiaryReq:
+      type: object
+      properties:
+        userId:
+          type: integer
+          description: The unique identifier for the user.
+          example: 123
+        communicates:
+          type: array
+          items:
+            type: string
+          description: List of communication messages associated with the diary entry.
+          example: ["Hello, world!", "This is my second entry."]
+      required:
+        - userId
+    CreateDiaryWrapper:
+      type: object
+      properties:
+        diary:
+          type: string
+          description: The content of the created diary entry.
+          example: "This is my first diary entry!"
+        result:
+          type: boolean
+          description: Whether the diary entry creation was successful.
+          example: true
+      required:
+        - diary
+        - result
+    CreateDiaryWrapperResult:
+      type: object
+      properties:
+        resultCode:
+          type: string
+          description: The result code of the operation (e.g., success or error code).
+          example: "200"
+        result:
+          $ref: "#/components/schemas/CreateDiaryWrapper"
+      required:
+        - resultCode
+        - result
+
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: Authorization

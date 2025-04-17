@@ -1,0 +1,21 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    },
+    "module": "esnext", // または "es2020", "es2022", "commonjs" など
+    "target": "es2020", // 必要に応じてターゲットも設定
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "src/**/*",
+    "node_modules/whatwg-fetch" // 必要に応じて追加
+  ]
+}
