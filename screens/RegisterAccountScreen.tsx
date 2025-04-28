@@ -14,7 +14,7 @@ import LoadingScreen from "./LoadingScreen";
 import CustomButton from "@/components/Button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LottieView from "lottie-react-native";
-import { RegisterAccountApi } from "./RegisterAPI";
+import { RegisterAccountApi } from "../api/RegisterAPI";
 
 export default function RegisterAccountScreen() {
   const router = useRouter();

@@ -14,7 +14,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LoadingScreen from "./LoadingScreen";
-import { RegisterNicknameApi } from "./RegisterNicknameAPI";
+import { RegisterNicknameApi } from "../api/RegisterNicknameAPI";
 import { Alert } from "react-native";
 
 export default function RegisterNicknameScreen() {

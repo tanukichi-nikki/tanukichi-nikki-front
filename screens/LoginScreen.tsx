@@ -14,7 +14,7 @@ import LoadingScreen from "./LoadingScreen";
 import CustomButton from "@/components/Button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LottieView from "lottie-react-native";
-import { loginUser } from "./LoginAPI";
+import { loginUser } from "../api/LoginAPI";
 
 export default function LoginScreen() {
   const router = useRouter();

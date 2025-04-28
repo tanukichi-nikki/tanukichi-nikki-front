@@ -20,7 +20,8 @@ const TopScreen = () => {
     { id: string; text: string; sender: "user" | "ai" }[]
   >([{ id: "1", text: "こんにちは！今日は一日どうだったも？", sender: "ai" }]);
 
-  const handleSend = () => {
+  // AIとの会話をダミーで再現している。本来であればhandleSendメソッドを使ってAPIを呼び出す。
+  const handleSendDamy = () => {
     if (inputText.trim() === "") return;
 
     // ユーザーのメッセージを追加
@@ -35,6 +36,40 @@ const TopScreen = () => {
     ]);
 
     setInputText(""); // 入力フィールドをクリア
+  };
+
+  // AIチャットが実装できたらこのメソッドを使う。
+  const handleSend = async () => {
+    if (inputText.trim() === "") return;
+  
+    const userMessage: { id: string; text: string; sender: "user" | "ai" } = {
+      id: Date.now().toString(),
+      text: inputText,
+      sender: "user",
+    };
+    setMessages((prevMessages) => [...prevMessages, userMessage]);
+    setInputText(""); // 先にクリア
+  
+    try {
+      const response = await fetch("あなたのAPIエンドポイントをここに記載する", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: inputText }),
+      });
+      const data = await response.json();
+  
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          id: (Date.now() + 1).toString(),
+          text: data.reply, // ← APIから返されたAIの返答
+          sender: "ai",
+        },
+      ]);
+    } catch (error) {
+      console.error(error);
+      // エラー時のメッセージ追加なども検討
+    }
   };
 
   const renderItem = ({ item }: { item: { text: string; sender: string } }) => (
@@ -83,7 +118,7 @@ const TopScreen = () => {
             onChangeText={setInputText}
             multiline={true} // ← 改行を有効にする
           />
-          <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
+          <TouchableOpacity style={styles.sendButton} onPress={handleSendDamy}>
             <Image
               source={require("../assets/images/leef.png")}
               style={styles.sendButtonText}

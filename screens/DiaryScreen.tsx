@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { Calendar } from "react-native-calendars";
 
-
 export default function DiaryScreen() {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [diaryContent, setDiaryContent] = useState(
@@ -19,7 +18,7 @@ export default function DiaryScreen() {
           setSelectedDate(day.dateString);
           // ここでバックエンドから日記を取得（APIの呼び出し)
           setDiaryContent(`選択された日付 ${day.dateString}:
-        '今日はクリスマスだったも！クリスマスマーケット行って、ホットワイン飲んだも！その後にスケートをしたけど、こけてあざになっちゃったも、、、'`)
+        '今日はクリスマスだったも！クリスマスマーケット行って、ホットワイン飲んだも！その後にスケートをしたけど、こけてあざになっちゃったも、、、'`);
         }}
         markedDates={
           selectedDate
@@ -37,9 +36,8 @@ export default function DiaryScreen() {
           textMonthFontWeight: "bold", // 月タイトルのフォントウェイト
         }}
       />
-        
-          <Text>{diaryContent}</Text>
-      
+
+      <Text>{diaryContent}</Text>
     </View>
   );
 }
