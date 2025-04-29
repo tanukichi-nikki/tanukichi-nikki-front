@@ -14,7 +14,7 @@ import LoadingScreen from "./LoadingScreen";
 import CustomButton from "@/components/Button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LottieView from "lottie-react-native";
-import { loginUser } from "../api/LoginAPI";
+import { loginUserApi } from "../api/LoginAPI";
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -31,9 +31,9 @@ export default function LoginScreen() {
     try {
       // ユーザー登録処理（擬似的な遅延を追加）
       // await new Promise((resolve) => setTimeout(resolve, 3000));
-      const data = await loginUser(name, password); //APIを実行
+      const data = await loginUserApi(name, password); //APIを実行
       Alert.alert("ログイン成功", `ユーザー名: ${data.result.name}さん`);
-      router.push("//top"); //  
+      router.push("//top"); //
     } catch (error) {
       // エラーハンドリング
       alert("ログインに失敗しました。");
@@ -50,7 +50,7 @@ export default function LoginScreen() {
     router.push("/registerAccount");
   };
   const handleDevelopLogin = () => {
-    router.push("/internetCheck");
+    router.push("/top");
   };
 
   return (

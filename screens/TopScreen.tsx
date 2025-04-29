@@ -1,3 +1,4 @@
+import { communicateApi } from "@/api/CommunicateAPI";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -11,6 +12,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
+  ActivityIndicator,
 } from "react-native";
 
 const TopScreen = () => {
@@ -19,10 +21,11 @@ const TopScreen = () => {
   const [messages, setMessages] = useState<
     { id: string; text: string; sender: "user" | "ai" }[]
   >([{ id: "1", text: "こんにちは！今日は一日どうだったも？", sender: "ai" }]);
+  const [loading, setLoading] = useState(false); // ローディング状態
 
   // AIとの会話をダミーで再現している。本来であればhandleSendメソッドを使ってAPIを呼び出す。
   const handleSendDamy = () => {
-    if (inputText.trim() === "") return;
+    if (!inputText.trim() || loading) return;
 
     // ユーザーのメッセージを追加
     setMessages((prevMessages) => [
@@ -40,35 +43,31 @@ const TopScreen = () => {
 
   // AIチャットが実装できたらこのメソッドを使う。
   const handleSend = async () => {
-    if (inputText.trim() === "") return;
-  
-    const userMessage: { id: string; text: string; sender: "user" | "ai" } = {
+    if (!inputText.trim() || loading) return; // ローディング中は打てない
+
+    const newUserMessage = {
       id: Date.now().toString(),
       text: inputText,
-      sender: "user",
+      sender: "user" as const,
     };
-    setMessages((prevMessages) => [...prevMessages, userMessage]);
-    setInputText(""); // 先にクリア
-  
+    setMessages((prevMessages) => [...prevMessages, newUserMessage]);
+    setInputText(""); // 入力フィールドをクリア
+    setLoading(true);
+
     try {
-      const response = await fetch("あなたのAPIエンドポイントをここに記載する", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: inputText }),
-      });
-      const data = await response.json();
-  
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        {
-          id: (Date.now() + 1).toString(),
-          text: data.reply, // ← APIから返されたAIの返答
-          sender: "ai",
-        },
-      ]);
+      const { result } = await communicateApi(inputText);
+
+      const newAiMessage = {
+        id: (Date.now() + 1).toString(),
+        text: result.communicate,
+        sender: "ai" as const,
+      };
+      setMessages((prevMessages) => [...prevMessages, newAiMessage]);
     } catch (error) {
-      console.error(error);
+      console.error("AIとの会話に失敗しました", error);
       // エラー時のメッセージ追加なども検討
+    } finally {
+      setLoading(false); // 通信完了後はローディング解除
     }
   };
 
@@ -118,11 +117,19 @@ const TopScreen = () => {
             onChangeText={setInputText}
             multiline={true} // ← 改行を有効にする
           />
-          <TouchableOpacity style={styles.sendButton} onPress={handleSendDamy}>
-            <Image
-              source={require("../assets/images/leef.png")}
-              style={styles.sendButtonText}
-            />
+          <TouchableOpacity
+            style={styles.sendButton}
+            onPress={handleSendDamy}
+            disabled={loading} // ローディング中は押せない
+          >
+            {loading ? (
+              <ActivityIndicator size="small" color="#00AA00" /> // ローディングアイコン
+            ) : (
+              <Image
+                source={require("../assets/images/leef.png")}
+                style={styles.sendButtonText}
+              />
+            )}
           </TouchableOpacity>
         </View>
 

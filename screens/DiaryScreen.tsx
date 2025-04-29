@@ -18,7 +18,7 @@ export default function DiaryScreen() {
           setSelectedDate(day.dateString);
           // ここでバックエンドから日記を取得（APIの呼び出し)
           setDiaryContent(`選択された日付 ${day.dateString}:
-        '今日はクリスマスだったも！クリスマスマーケット行って、ホットワイン飲んだも！その後にスケートをしたけど、こけてあざになっちゃったも、、、'`);
+        '今日はクリスマスだったも！クリスマスマーケット行って、ホットワイン飲んだも！その後にスケートをしたけど、こけてあざになっちゃったも、、、'`)
         }}
         markedDates={
           selectedDate

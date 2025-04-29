@@ -9,7 +9,7 @@ const defaultApi = new LoginApi(
 );
 
 // 🔹 ログイン関数
-export const loginUser = async (name: string, password: string) => {
+export const loginUserApi = async (name: string, password: string) => {
   try {
     const loginreq: LoginReq = { name: name, password: password };
     const response = await defaultApi.doLogin(loginreq); // APIを呼ぶ
