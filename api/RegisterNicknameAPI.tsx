@@ -4,7 +4,7 @@ import { Configuration, DefaultApi, RegisterNickNameReq } from "@/src/client";
 const defaultApi = new DefaultApi(
   new Configuration({
     basePath:
-      "http://tanukichi-alb-366766036.ap-northeast-1.elb.amazonaws.com",
+      "http://tanukichi-alb-44905663.ap-northeast-1.elb.amazonaws.com",
     // baseOptions: {
     //     withCredentials: true, // ← これでcookie付きリクエストになる！
     //   },

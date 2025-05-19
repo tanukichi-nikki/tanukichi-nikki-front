@@ -119,7 +119,7 @@ const TopScreen = () => {
           />
           <TouchableOpacity
             style={styles.sendButton}
-            onPress={handleSendDamy}
+            onPress={handleSend}
             disabled={loading} // ローディング中は押せない
           >
             {loading ? (

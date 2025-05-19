@@ -4,7 +4,7 @@ import { CommunicateReq, Configuration, DefaultApi, LoginApi, LoginReq } from "@
 const defaultApi = new DefaultApi(
   new Configuration({
     basePath:
-      "http://tanukichi-alb-366766036.ap-northeast-1.elb.amazonaws.com",
+      "http://tanukichi-alb-44905663.ap-northeast-1.elb.amazonaws.com",
   })
 );
 
@@ -15,7 +15,7 @@ export const communicateApi = async ( communicate : string ) => {
     const response = await defaultApi.communicate(communicatereq); // APIを呼ぶ
     return response.data; // レスポンスデータを返す
   } catch (error) {
-    console.error("Login failed:", error);
+    console.error("communicate error:", error);
     throw error;
   }
 };
