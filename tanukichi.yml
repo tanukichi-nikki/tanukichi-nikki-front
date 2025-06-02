@@ -4,7 +4,7 @@ info:
   description: API for user login functionality.
   version: 1.0.0
 servers:
-  - url: http://localhost:8081/tanukichi
+  - url: http://localhost:8082
 
 paths:
   /api/v1/login:
@@ -20,17 +20,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/LoginReq"
+              $ref: '#/components/schemas/LoginReq'
       responses:
-        "200":
+        '200':
           description: Login successful, returns the login result.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LoginWrapperResult"
-        "400":
+                $ref: '#/components/schemas/LoginWrapperResult'
+        '400':
           description: Bad request, validation failed or missing parameters.
-        "500":
+        '500':
           description: Internal server error.
       security:
         - api_key: []
@@ -47,17 +47,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/RegisterUserReq"
+              $ref: '#/components/schemas/RegisterUserReq'
       responses:
-        "200":
+        '200':
           description: User registration successful, returns the registration result.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RegisterUserWrapperResult"
-        "400":
+                $ref: '#/components/schemas/RegisterUserWrapperResult'
+        '400':
           description: Bad request, validation failed or missing parameters.
-        "500":
+        '500':
           description: Internal server error.
   /api/v1/register/nickName:
     post:
@@ -68,18 +68,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/RegisterNickNameReq"
+              $ref: '#/components/schemas/RegisterNickNameReq'
         required: true
       responses:
-        "200":
+        '200':
           description: Successfully registered nickname
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RegisterNickNameWrapperResult"
-        "400":
+                $ref: '#/components/schemas/RegisterNickNameWrapperResult'
+        '400':
           description: Bad request (e.g., invalid input)
-        "500":
+        '500':
           description: Internal server error
   /api/v1/communicate:
     post:
@@ -90,55 +90,83 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CommunicateReq"
+              $ref: '#/components/schemas/CommunicateReq'
         required: true
       responses:
-        "200":
+        '200':
           description: Successfully sent the communication message
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CommunicateWrapperResult"
-        "400":
+                $ref: '#/components/schemas/CommunicateWrapperResult'
+        '400':
           description: Bad request (e.g., invalid input)
-        "500":
+        '500':
           description: Internal server error
   /api/v1/diary:
-    post:
+    get:
       summary: Create a new diary entry
-      operationId: createDiary
-      requestBody:
-        description: Request payload for creating a new diary entry.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateDiaryReq"
-        required: true
+      description: Creates a new diary entry for the user. The session user ID and communication data are required.
+      operationId: doCreateDiary
+      tags:
+        - Diary
       responses:
-        "200":
-          description: Successfully created the diary entry
+        '200':
+          description: Successfully created the diary entry.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateDiaryWrapperResult"
-        "400":
-          description: Bad request (e.g., invalid input)
-        "500":
-          description: Internal server error
+                $ref: '#/components/schemas/CreateDiaryWrapperResult'
+        '400':
+          description: Bad request, missing or invalid parameters.
+        '500':
+          description: Internal server error.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: Bearer token for user authentication
+          schema:
+            type: string
+            example: "Bearer your_token_here"
+  /api/v1/refer/diary:
+    post:
+      summary: Get diary entries by month
+      description: Retrieve diary entries based on the given month value.
+      operationId: doReferDiary
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReferDiaryReq'
+      responses:
+        '200':
+          description: Successfully retrieved diary entries.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReferDiaryWrapperResult'
+        '400':
+          description: Bad Request - Invalid input or missing parameters.
+        '500':
+          description: Internal Server Error - An unexpected error occurred.
 
 components:
   schemas:
     LoginReq:
       type: object
       properties:
-        name:
+        user:
           type: string
-          description: The name of the user.
+          description: The user of the user.
         password:
           type: string
           description: The password of the user.
       required:
-        - name
+        - user
         - password
     LoginWrapperResult:
       type: object
@@ -147,7 +175,7 @@ components:
           type: string
           description: The result code of the login attempt.
         result:
-          $ref: "#/components/schemas/LoginWrapper"
+          $ref: '#/components/schemas/LoginWrapper'
       required:
         - resultCode
         - result
@@ -193,7 +221,7 @@ components:
           description: The result code of the registration attempt.
           example: "200"
         result:
-          $ref: "#/components/schemas/RegisterUserWrapper"
+          $ref: '#/components/schemas/RegisterUserWrapper'
       required:
         - resultCode
         - result
@@ -215,7 +243,7 @@ components:
       required:
         - userId
         - name
-        - result
+        - result 
     RegisterNickNameReq:
       type: object
       properties:
@@ -245,10 +273,10 @@ components:
           description: The result code of the operation (e.g., success or error code).
           example: "200"
         result:
-          $ref: "#/components/schemas/RegisterNickNameWrapper"
+          $ref: '#/components/schemas/RegisterNickNameWrapper'
       required:
         - resultCode
-        - result
+        - result 
     CommunicateReq:
       type: object
       properties:
@@ -276,10 +304,10 @@ components:
           description: The result code of the operation (e.g., success or error code).
           example: "200"
         result:
-          $ref: "#/components/schemas/CommunicateWrapper"
+          $ref: '#/components/schemas/CommunicateWrapper'
       required:
         - resultCode
-        - result
+        - result  
     CreateDiaryReq:
       type: object
       properties:
@@ -295,32 +323,64 @@ components:
           example: ["Hello, world!", "This is my second entry."]
       required:
         - userId
-    CreateDiaryWrapper:
-      type: object
-      properties:
-        diary:
-          type: string
-          description: The content of the created diary entry.
-          example: "This is my first diary entry!"
-        result:
-          type: boolean
-          description: Whether the diary entry creation was successful.
-          example: true
-      required:
-        - diary
-        - result
     CreateDiaryWrapperResult:
       type: object
       properties:
         resultCode:
           type: string
-          description: The result code of the operation (e.g., success or error code).
+          description: The result code of the operation (e.g., 200 for success).
+        result:
+          $ref: '#/components/schemas/CreateDiaryWrapper'
+    CreateDiaryWrapper:
+      type: object
+      properties:
+        diary:
+          type: string
+          description: The content of the diary entry.
+        result:
+          type: boolean
+          description: The result of the diary creation operation (true if successful, false otherwise).
+    ReferDiaryReq:
+      type: object
+      required:
+        - month
+      properties:
+        month:
+          type: string
+          example: "202505"
+    ReferDiaryWrapper:
+      type: object
+      required:
+        - month
+        - dayDiarys
+      properties:
+        month:
+          type: string
+          example: "202505"
+        dayDiarys:
+          type: array
+          items:
+            $ref: '#/components/schemas/DayDiary'
+    ReferDiaryWrapperResult:
+      type: object
+      properties:
+        resultCode:
+          type: string
           example: "200"
         result:
-          $ref: "#/components/schemas/CreateDiaryWrapper"
-      required:
-        - resultCode
-        - result
+          $ref: '#/components/schemas/ReferDiaryWrapper'
+    DayDiary:
+      type: object
+      description: A diary entry for a specific day (Define fields according to DayDiary class).
+      properties:
+        day:
+          type: string
+          format: day
+          example: "20250522"
+        diary:
+          type: string
+          format: diary
+          example: "Today I wrote some Swagger docs."
 
   securitySchemes:
     api_key:

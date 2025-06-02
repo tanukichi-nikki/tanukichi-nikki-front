@@ -19,7 +19,7 @@ import type { Configuration } from './configuration';
 import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
 import globalAxios from 'axios';
 
-export const BASE_PATH = "http://tanukichi-alb-1953769358.ap-northeast-1.elb.amazonaws.com".replace(/\/+$/, "");
+export const BASE_PATH = "http://localhost:8082".replace(/\/+$/, "");
 
 /**
  *

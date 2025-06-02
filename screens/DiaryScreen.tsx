@@ -1,23 +1,62 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet } from "react-native";
 import { Calendar } from "react-native-calendars";
+import dayjs from "dayjs";
+import { DayDiaryApi } from "@/api/DayDiaryAPI";
+import { DayDiary, ReferDiaryWrapperResult } from "@/src/client";
 
 export default function DiaryScreen() {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [diaryContent, setDiaryContent] = useState(
-    "今日はとても良い一日でした。楽しい出来事がたくさんありました。"
-  );
+  const [diaryContent, setDiaryContent] = useState<String>("");
+  const [month, setMonth] = useState<string>(dayjs().format("YYYYMM"));
+  const [diaryList, setDiaryList] = useState<DayDiary[]>([]);
+
+  useEffect(() => {
+    const fetchDiary = async () => {
+      try {
+        const result: ReferDiaryWrapperResult = await DayDiaryApi(month);
+
+        console.log("日記参照APIの結果：", result.result?.dayDiarys);
+
+        if (result.result && Array.isArray(result.result.dayDiarys)) {
+          setDiaryList(result.result.dayDiarys);
+        } else {
+          setDiaryList([]); // 安全なデフォルト
+        }
+      } catch (error) {
+        console.error("日記の取得に失敗しました", error);
+        setDiaryList([]); // エラー時も初期化
+      }
+    };
+
+    fetchDiary();
+  }, [month]);
+
+  // 日付選択時に該当する日記を検索して表示
+  const handleDayPress = (day: { dateString: string }) => {
+    console.log("押された日付①：", day);
+    setSelectedDate(day.dateString);
+    const targetDay = dayjs(day.dateString).format("YYYYMMDD");
+    console.log("検索する日付：", targetDay);
+    console.log("日記リスト：", diaryList);
+    const diary = diaryList.find((entry) => {
+      console.log("entryの中身：", entry);
+      return entry.day === targetDay;
+    });
+    setDiaryContent(diary?.diary ?? "この日の日記はまだありません。");
+  };
 
   return (
     <View style={styles.container}>
       {/* カレンダー表示 */}
       <Calendar
-        onDayPress={(day: {
-          dateString: React.SetStateAction<string | null>;
-        }) => {
-          setSelectedDate(day.dateString);
-          // ここでバックエンドから日記を取得（APIの呼び出し)
-          setDiaryContent(`選択された日付 ${day.dateString}:'今日はクリスマスだったも！クリスマスマーケット行って、ホットワイン飲んだも！その後にスケートをしたけど、こけてあざになっちゃったも、、、'`)
+        onDayPress={handleDayPress}
+        onMonthChange={(monthObj: { year: any; month: any }) => {
+          const newMonth = `${monthObj.year}${String(monthObj.month).padStart(
+            2,
+            "0"
+          )}`;
+          setMonth(newMonth);
         }}
         markedDates={
           selectedDate

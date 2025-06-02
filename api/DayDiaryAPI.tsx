@@ -1,4 +1,4 @@
-import { CommunicateReq, Configuration, DefaultApi, LoginApi, LoginReq } from "@/src/client";
+import { Configuration, DefaultApi, ReferDiaryReq } from "@/src/client";
 
 // APIの設定
 const defaultApi = new DefaultApi(
@@ -9,10 +9,11 @@ const defaultApi = new DefaultApi(
 );
 
 // 🔹 AIチャットAPI関数
-export const communicateApi = async ( communicate : string ) => {
+export const DayDiaryApi = async ( month : string ) => {
   try {
-    const communicatereq : CommunicateReq = { communicate : communicate}
-    const response = await defaultApi.communicate(communicatereq); // APIを呼ぶ
+    const ReferDiaryReq : ReferDiaryReq = { month }
+    const response = await defaultApi.doReferDiary( ReferDiaryReq ); // APIを呼ぶ
+    console.log("日記APIを呼び出してる");
     return response.data; // レスポンスデータを返す
   } catch (error) {
     console.error("communicate error:", error);
