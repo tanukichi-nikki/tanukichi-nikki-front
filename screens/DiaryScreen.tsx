@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Button, Alert } from "react-native";
 import { Calendar } from "react-native-calendars";
 import dayjs from "dayjs";
 import { DayDiaryApi } from "@/api/DayDiaryAPI";
-import { DayDiary, ReferDiaryWrapperResult } from "@/src/client";
+import { CreateDiaryWrapperResult, DayDiary, ReferDiaryWrapperResult } from "@/src/client";
+import { CreateDiaryApi } from "@/api/CreateDiaryAPI";
 
 export default function DiaryScreen() {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -31,6 +32,23 @@ export default function DiaryScreen() {
 
     fetchDiary();
   }, [month]);
+
+  const createDiary = async () => {
+    try {
+      const result = await CreateDiaryApi();
+      console.log("日記APIの結果:", result.result);
+      Alert.alert("成功", "日記を作成しました");
+    } catch (error) {
+      console.error("日記作成に失敗しました", error);
+      Alert.alert("エラー", "日記作成に失敗しました");
+    }
+  };
+
+  // useEffect(() => {
+  //   createDiary();
+  // }, []);
+
+  
 
   // 日付選択時に該当する日記を検索して表示
   const handleDayPress = (day: { dateString: string }) => {
@@ -76,6 +94,11 @@ export default function DiaryScreen() {
       />
 
       <Text>{diaryContent}</Text>
+
+      <Button 
+      title="日記作成ボタン"
+      onPress={createDiary}>
+        </Button>
     </View>
   );
 }

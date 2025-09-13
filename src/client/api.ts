@@ -640,13 +640,10 @@ export const DiaryApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * Creates a new diary entry for the user. The session user ID and communication data are required.
          * @summary Create a new diary entry
-         * @param {string} authorization Bearer token for user authentication
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        doCreateDiary: async (authorization: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'authorization' is not null or undefined
-            assertParamExists('doCreateDiary', 'authorization', authorization)
+        doCreateDiary: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/v1/diary`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -661,9 +658,6 @@ export const DiaryApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            if (authorization != null) {
-                localVarHeaderParameter['Authorization'] = String(authorization);
-            }
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -686,12 +680,11 @@ export const DiaryApiFp = function(configuration?: Configuration) {
         /**
          * Creates a new diary entry for the user. The session user ID and communication data are required.
          * @summary Create a new diary entry
-         * @param {string} authorization Bearer token for user authentication
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async doCreateDiary(authorization: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateDiaryWrapperResult>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.doCreateDiary(authorization, options);
+        async doCreateDiary(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateDiaryWrapperResult>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.doCreateDiary(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DiaryApi.doCreateDiary']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -709,12 +702,11 @@ export const DiaryApiFactory = function (configuration?: Configuration, basePath
         /**
          * Creates a new diary entry for the user. The session user ID and communication data are required.
          * @summary Create a new diary entry
-         * @param {string} authorization Bearer token for user authentication
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        doCreateDiary(authorization: string, options?: RawAxiosRequestConfig): AxiosPromise<CreateDiaryWrapperResult> {
-            return localVarFp.doCreateDiary(authorization, options).then((request) => request(axios, basePath));
+        doCreateDiary(options?: RawAxiosRequestConfig): AxiosPromise<CreateDiaryWrapperResult> {
+            return localVarFp.doCreateDiary(options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -729,13 +721,12 @@ export class DiaryApi extends BaseAPI {
     /**
      * Creates a new diary entry for the user. The session user ID and communication data are required.
      * @summary Create a new diary entry
-     * @param {string} authorization Bearer token for user authentication
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DiaryApi
      */
-    public doCreateDiary(authorization: string, options?: RawAxiosRequestConfig) {
-        return DiaryApiFp(this.configuration).doCreateDiary(authorization, options).then((request) => request(this.axios, this.basePath));
+    public doCreateDiary(options?: RawAxiosRequestConfig) {
+        return DiaryApiFp(this.configuration).doCreateDiary(options).then((request) => request(this.axios, this.basePath));
     }
 }
 

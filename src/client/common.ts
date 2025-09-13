@@ -17,14 +17,12 @@ import type { Configuration } from "./configuration";
 import type { RequestArgs } from "./base";
 import type { AxiosInstance, AxiosResponse } from 'axios';
 import { RequiredError } from "./base";
-import axios from "axios";
 
 /**
  *
  * @export
  */
-export const DUMMY_BASE_URL = 'https://example.com';
-axios.defaults.withCredentials = true;
+export const DUMMY_BASE_URL = 'https://example.com'
 
 /**
  *

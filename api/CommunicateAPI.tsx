@@ -1,10 +1,10 @@
 import { CommunicateReq, Configuration, DefaultApi, LoginApi, LoginReq } from "@/src/client";
+import { API_BASE_PATH } from "./ApiConfig";
 
 // APIの設定
 const defaultApi = new DefaultApi(
   new Configuration({
-    basePath:
-      "http://tanukichi-alb-1334903106.ap-northeast-1.elb.amazonaws.com",
+    basePath:API_BASE_PATH,
   })
 );
 
