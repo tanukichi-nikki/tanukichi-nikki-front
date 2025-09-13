@@ -1,5 +1,5 @@
 import { Configuration, LoginApi, LoginReq, RegisterApi, RegisterUserReq } from "@/src/client";
-import { API_BASE_PATH } from "./ApiConfig";
+import { API_BASE_PATH, handleApiError } from "./ApiConfig";
 
 // APIの設定
 const defaultApi = new RegisterApi(
@@ -16,7 +16,7 @@ export const RegisterAccountApi = async (name: string, password: string) => {
     console.log("ユーザー名:",response.data.result.name)
     return response.data; // レスポンスデータを返す
   } catch (error) {
-    console.error("UserRegister failed:", error);
+    handleApiError(error); // 共通エラーハンドリング
     throw error;
   }
 };

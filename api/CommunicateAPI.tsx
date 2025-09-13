@@ -1,5 +1,5 @@
 import { CommunicateReq, Configuration, DefaultApi, LoginApi, LoginReq } from "@/src/client";
-import { API_BASE_PATH } from "./ApiConfig";
+import { API_BASE_PATH, handleApiError } from "./ApiConfig";
 
 // APIの設定
 const defaultApi = new DefaultApi(
@@ -15,7 +15,7 @@ export const communicateApi = async ( communicate : string ) => {
     const response = await defaultApi.communicate(communicatereq); // APIを呼ぶ
     return response.data; // レスポンスデータを返す
   } catch (error) {
-    console.error("communicate error:", error);
+    handleApiError(error); // 共通エラーハンドリング
     throw error;
   }
 };

@@ -1,5 +1,5 @@
 import { Configuration, LoginApi, LoginReq } from "@/src/client";
-import { API_BASE_PATH } from "./ApiConfig";
+import { API_BASE_PATH, handleApiError } from "./ApiConfig";
 
 // APIの設定
 const defaultApi = new LoginApi(
@@ -15,7 +15,7 @@ export const loginUserApi = async (name: string, password: string) => {
     const response = await defaultApi.doLogin(loginreq); // APIを呼ぶ
     return response.data; // レスポンスデータを返す
   } catch (error) {
-    console.error("Login failed:", error);
+    handleApiError(error); // 共通エラーハンドリング
     throw error;
   }
 };

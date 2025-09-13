@@ -1,5 +1,5 @@
 import { Configuration,DiaryApi, DiaryApiFp } from "@/src/client";
-import { API_BASE_PATH } from "./ApiConfig";
+import { API_BASE_PATH, handleApiError } from "./ApiConfig";
 
 // APIの設定
 const defaultApi = new DiaryApi(
@@ -15,7 +15,7 @@ export const CreateDiaryApi = async () => {
     console.log("日記作成API:", response);
     return response.data; // レスポンスデータを返す
   } catch (error) {
-    console.error("日記作成 失敗:", error);
+    handleApiError(error); // 共通エラーハンドリング
     throw error;
   }
 };

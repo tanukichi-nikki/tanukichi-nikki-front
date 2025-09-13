@@ -1,5 +1,5 @@
 import { Configuration, DefaultApi, ReferDiaryReq } from "@/src/client";
-import { API_BASE_PATH } from "./ApiConfig";
+import { API_BASE_PATH, handleApiError } from "./ApiConfig";
 
 // APIの設定
 const defaultApi = new DefaultApi(
@@ -16,7 +16,7 @@ export const DayDiaryApi = async ( month : string ) => {
     console.log("日記APIを呼び出してる");
     return response.data; // レスポンスデータを返す
   } catch (error) {
-    console.error("communicate error:", error);
+    handleApiError(error); // 共通エラーハンドリング
     throw error;
   }
 };
